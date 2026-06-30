@@ -1,0 +1,12 @@
+.env
+*.session
+*.session-journal
+*.db
+*.html
+contacts_*.csv
+entities_*.csv
+data/
+media/
+[0-9]*/
+__pycache__/
+*.py[cod]

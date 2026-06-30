@@ -64,20 +64,16 @@ Before using TelegramBackup, you need to obtain your own Telegram API credential
    - Keep these values secure - they're associated with your Telegram account
 
 4. **Configure TelegramBackup**:
-   - Open the `telegram_backup.py` file in a text editor
-   - Locate these lines near the beginning of the file:
-     ```python
-     api_id = ********
-     api_hash = ********************************
+   - Copy `.env.example` to `.env`
+   - Fill in your actual credentials:
+     ```env
+     TELEGRAM_API_ID=12345678
+     TELEGRAM_API_HASH=abcdef1234567890abcdef1234567890
+     TELEGRAM_PHONE_NUMBER=+12345678900
      ```
-   - Replace them with your actual credentials:
-     ```python
-     api_id = 12345678  # Replace with your own api_id (numbers only, no quotes)
-     api_hash = "abcdef1234567890abcdef1234567890"  # Replace with your own api_hash (in quotes)
-     ```
-   - Save the file
+   - `TELEGRAM_PHONE_NUMBER` is optional. If you leave it empty or remove it, the script will ask for your phone number when it starts.
 
-> **IMPORTANT**: The `api_id` must be an integer without quotes, and the `api_hash` must be a string with quotes.
+> **IMPORTANT**: Keep `.env` private. It is ignored by git and should not be committed.
 
 ## 🚀 Usage
 
@@ -112,14 +108,13 @@ Before using TelegramBackup, you need to obtain your own Telegram API credential
 
 6. **Updating existing backups**:
    - When using the [U] option, select the entity you want to update
-   - The script will identify the last message in your existing backup
-   - Only messages newer than this will be retrieved and added to the database
+   - Existing messages are skipped, but the scan continues through older messages to fill gaps from interrupted runs
    - The HTML file will be regenerated with all messages (old and new)
 
 7. **Accessing Your Backup**:
-   - Messages are stored in an SQLite database (`.db` file)
-   - An HTML file is generated for easy browsing of messages
-   - Media files are saved in the `media/[entity_id]/` directory
+   - Each entity is saved in `data/[entity_id]/`
+   - The SQLite database (`.db`) and HTML export (`.html`) are stored in the entity directory
+   - Downloaded media files are stored in `data/[entity_id]/media/`
    - The HTML interface shows messages grouped by date with sender information, reactions, replies, and media playback
 
 ## 📱 HTML Export Features

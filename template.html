@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Messages - {{chat_name}}</title>
+    <title>Сообщения Telegram - {{chat_name}}</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -499,19 +499,19 @@
 <body>
     <div class="header">
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search messages...">
+            <input type="text" id="searchInput" placeholder="Поиск по сообщениям...">
         </div>
         <div class="header-title">{{chat_name}}</div>
     </div>
     <div id="replyNavigator">
-        <div class="reply-nav-header">Reply Chain Navigator</div>
+        <div class="reply-nav-header">Навигация по ответам</div>
         <div class="reply-chain-container" id="replyChainContainer">
         </div>
         <div class="reply-nav-buttons">
-            <button class="reply-nav-button" id="prevReplyButton" disabled>◀ Previous</button>
-            <button class="reply-nav-button" id="closeReplyNavButton">Close</button>
-            <button class="reply-nav-button" id="returnToOriginButton">Return to Origin</button>
-            <button class="reply-nav-button" id="nextReplyButton" disabled>Next ▶</button>
+            <button class="reply-nav-button" id="prevReplyButton" disabled>◀ Назад</button>
+            <button class="reply-nav-button" id="closeReplyNavButton">Закрыть</button>
+            <button class="reply-nav-button" id="returnToOriginButton">К исходному</button>
+            <button class="reply-nav-button" id="nextReplyButton" disabled>Вперед ▶</button>
         </div>
     </div>
     <div class="container">
@@ -536,10 +536,10 @@
                             <div class="message-time">{{ fullDateTime }}</div>
                         </div>
                     {% elif message[9] %}
-                        <div id="msg{{message[0]}}" class="message {% if from_self %}from-self{% else %}from-other{% endif %} {% if is_pinned %}pinned-message{% endif %}" data-msg-id="{{message[0]}}" data-reply-to="msg{{message[9]}}" data-sender="{{message[8] if message[8] else 'Unknown'}}" data-time="{{fullDateTime}}">
+                        <div id="msg{{message[0]}}" class="message {% if from_self %}from-self{% else %}from-other{% endif %} {% if is_pinned %}pinned-message{% endif %}" data-msg-id="{{message[0]}}" data-reply-to="msg{{message[9]}}" data-sender="{{message[8] if message[8] else 'Неизвестно'}}" data-time="{{fullDateTime}}">
                             {% if message[8] and not from_self %}
                                 <div class="message-sender">
-                                    {{message[8] if message[8] else "Unknown"}}
+                                    {{message[8] if message[8] else "Неизвестно"}}
                                     {% if user_id %}
                                         <span class="sender-id">(ID: {{user_id}})</span>
                                     {% endif %}
@@ -554,13 +554,13 @@
                                     </div>
                                 </a>
                                 <div class="reply-preview" id="preview-{{message[9]}}">
-                                    Loading...
+                                    Загрузка...
                                 </div>
                             </div>
                             
                             {% if message[5] %}
                                 <div class="message-forwarded">
-                                    Forwarded from: <a href="{{get_url_from_forwarded(message[5])}}" class="message-link">{{get_url_from_forwarded(message[5])}}</a>
+                                    Переслано из: <a href="{{get_url_from_forwarded(message[5])}}" class="message-link">{{get_url_from_forwarded(message[5])}}</a>
                                 </div>
                             {% endif %}
                             
@@ -571,29 +571,29 @@
                                 
                                 {% if message[4] %}
                                     {% if is_voice_message %}
-                                        <div class="media-label">Voice message: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Голосовое сообщение: <span class="media-filename">{{filename}}</span></div>
                                     {% elif message[3] == 'MessageMediaPhoto' %}
-                                        <div class="media-label">Photo: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Фото: <span class="media-filename">{{filename}}</span></div>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp4') or message[4].lower().endswith('.webm')) %}
-                                        <div class="media-label">Video: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Видео: <span class="media-filename">{{filename}}</span></div>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp3') or message[4].lower().endswith('.flac')) %}
-                                        <div class="media-label">Music file: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Музыкальный файл: <span class="media-filename">{{filename}}</span></div>
                                         <audio controls>
                                             {% if message[4].lower().endswith('.mp3') %}
                                             <source src="{{message[4]}}" type="audio/mpeg">
                                             {% elif message[4].lower().endswith('.flac') %}
                                             <source src="{{message[4]}}" type="audio/flac">
                                             {% endif %}
-                                            Your browser does not support the audio tag.
+                                            Ваш браузер не поддерживает аудио.
                                         </audio>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.ogg') or message[4].lower().endswith('.oga') or (filename and filename.startswith('voice_'))) %}
-                                        <div class="media-label">Voice recording: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Голосовая запись: <span class="media-filename">{{filename}}</span></div>
                                         <audio controls>
                                             <source src="{{message[4]}}" type="audio/ogg">
-                                            Your browser does not support the audio tag.
+                                            Ваш браузер не поддерживает аудио.
                                         </audio>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.m4a') or message[4].lower().endswith('.aac') or message[4].lower().endswith('.wav')) %}
-                                        <div class="media-label">Audio file: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Аудиофайл: <span class="media-filename">{{filename}}</span></div>
                                         <audio controls>
                                             {% if message[4].lower().endswith('.m4a') %}
                                             <source src="{{message[4]}}" type="audio/mp4">
@@ -602,28 +602,28 @@
                                             {% elif message[4].lower().endswith('.wav') %}
                                             <source src="{{message[4]}}" type="audio/wav">
                                             {% endif %}
-                                            Your browser does not support the audio tag.
+                                            Ваш браузер не поддерживает аудио.
                                         </audio>
                                     {% elif message[3] == 'MessageMediaDocument' %}
                                         {% set file_ext = filename.split('.')[-1]|lower if '.' in filename else '' %}
                                         {% if file_ext == 'mp3' or file_ext == 'flac' %}
-                                            <div class="media-label">Music file: <span class="media-filename">{{filename}}</span></div>
+                                            <div class="media-label">Музыкальный файл: <span class="media-filename">{{filename}}</span></div>
                                             <audio controls>
                                                 {% if file_ext == 'mp3' %}
                                                 <source src="{{message[4]}}" type="audio/mpeg">
                                                 {% elif file_ext == 'flac' %}
                                                 <source src="{{message[4]}}" type="audio/flac">
                                                 {% endif %}
-                                                Your browser does not support the audio tag.
+                                                Ваш браузер не поддерживает аудио.
                                             </audio>
                                         {% elif file_ext == 'ogg' or file_ext == 'oga' or filename.startswith('voice_') %}
-                                            <div class="media-label">Voice recording: <span class="media-filename">{{filename}}</span></div>
+                                            <div class="media-label">Голосовая запись: <span class="media-filename">{{filename}}</span></div>
                                             <audio controls>
                                                 <source src="{{message[4]}}" type="audio/ogg">
-                                                Your browser does not support the audio tag.
+                                                Ваш браузер не поддерживает аудио.
                                             </audio>
                                         {% elif file_ext == 'm4a' or file_ext == 'aac' or file_ext == 'wav' %}
-                                            <div class="media-label">Audio file: <span class="media-filename">{{filename}}</span></div>
+                                            <div class="media-label">Аудиофайл: <span class="media-filename">{{filename}}</span></div>
                                             <audio controls>
                                                 {% if file_ext == 'm4a' %}
                                                 <source src="{{message[4]}}" type="audio/mp4">
@@ -632,28 +632,28 @@
                                                 {% elif file_ext == 'wav' %}
                                                 <source src="{{message[4]}}" type="audio/wav">
                                                 {% endif %}
-                                                Your browser does not support the audio tag.
+                                                Ваш браузер не поддерживает аудио.
                                             </audio>
                                         {% elif file_ext == 'mp4' or file_ext == 'webm' %}
-                                            <div class="media-label">Video: <span class="media-filename">{{filename}}</span></div>
+                                            <div class="media-label">Видео: <span class="media-filename">{{filename}}</span></div>
                                             <video controls class="message-media">
                                                 <source src="{{message[4]}}" type="{% if file_ext == 'mp4' %}video/mp4{% else %}video/webm{% endif %}">
-                                                Your browser does not support the video tag.
+                                                Ваш браузер не поддерживает видео.
                                             </video>
                                         {% elif file_ext == 'webp' %}
-                                            <div class="media-label">Sticker: <span class="media-filename">{{filename}}</span></div>
-                                            <img src="{{message[4]}}" alt="Sticker" class="message-media">
+                                            <div class="media-label">Стикер: <span class="media-filename">{{filename}}</span></div>
+                                            <img src="{{message[4]}}" alt="Стикер" class="message-media">
                                         {% else %}
-                                            <div class="media-label">File: <span class="media-filename">{{filename}}</span></div>
+                                            <div class="media-label">Файл: <span class="media-filename">{{filename}}</span></div>
                                         {% endif %}
                                     {% endif %}
                                     
                                     {% if message[3] == 'MessageMediaPhoto' %}
-                                        <img src="{{message[4]}}" alt="Photo" class="message-media">
+                                        <img src="{{message[4]}}" alt="Фото" class="message-media">
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp4') or message[4].lower().endswith('.webm')) %}
                                         <video controls class="message-media">
                                             <source src="{{message[4]}}" type="video/mp4">
-                                            Your browser does not support the video tag.
+                                            Ваш браузер не поддерживает видео.
                                         </video>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp3') or message[4].lower().endswith('.ogg') or message[4].lower().endswith('.m4a') or message[4].lower().endswith('.oga') or message[4].lower().endswith('.flac') or message[4].lower().endswith('.aac') or message[4].lower().endswith('.wav')) %}
                                         <audio controls>
@@ -672,12 +672,12 @@
                                             {% else %}
                                             <source src="{{message[4]}}" type="audio/mpeg">
                                             {% endif %}
-                                            Your browser does not support the audio tag.
+                                            Ваш браузер не поддерживает аудио.
                                         </audio>
                                     {% elif is_voice_message or (message[3] == 'MessageMediaDocument' and message[4] and message[4].lower().endswith('.oga')) %}
                                         <audio controls>
                                             <source src="{{message[4]}}" type="audio/ogg">
-                                            Your browser does not support the audio tag.
+                                            Ваш браузер не поддерживает аудио.
                                         </audio>
                                     {% else %}
                                         {% set file_ext = filename.split('.')[-1]|lower if '.' in filename else '' %}
@@ -698,15 +698,15 @@
                                                 {% else %}
                                                 <source src="{{message[4]}}" type="audio/mpeg">
                                                 {% endif %}
-                                                Your browser does not support the audio tag.
+                                                Ваш браузер не поддерживает аудио.
                                             </audio>
                                         {% elif file_ext in ['mp4', 'webm'] %}
                                             <video controls class="message-media">
                                                 <source src="{{message[4]}}" type="{% if file_ext == 'mp4' %}video/mp4{% else %}video/webm{% endif %}">
-                                                Your browser does not support the video tag.
+                                                Ваш браузер не поддерживает видео.
                                             </video>
                                         {% else %}
-                                            <a href="{{message[4]}}" class="btn btn-primary" target="_blank">Open media</a>
+                                            <a href="{{message[4]}}" class="btn btn-primary" target="_blank">Открыть медиа</a>
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
@@ -772,10 +772,10 @@
                         </div>
                         <div class="clearfix"></div>
                     {% else %}
-                        <div id="msg{{message[0]}}" class="message {% if from_self %}from-self{% else %}from-other{% endif %} {% if is_pinned %}pinned-message{% endif %}" data-msg-id="{{message[0]}}" data-sender="{{message[8] if message[8] else 'Unknown'}}" data-time="{{fullDateTime}}">
+                        <div id="msg{{message[0]}}" class="message {% if from_self %}from-self{% else %}from-other{% endif %} {% if is_pinned %}pinned-message{% endif %}" data-msg-id="{{message[0]}}" data-sender="{{message[8] if message[8] else 'Неизвестно'}}" data-time="{{fullDateTime}}">
                             {% if message[8] and not from_self %}
                                 <div class="message-sender">
-                                    {{message[8] if message[8] else "Unknown"}}
+                                    {{message[8] if message[8] else "Неизвестно"}}
                                     {% if user_id %}
                                         <span class="sender-id">(ID: {{user_id}})</span>
                                     {% endif %}
@@ -784,7 +784,7 @@
                             
                             {% if message[5] %}
                                 <div class="message-forwarded">
-                                    Forwarded from: <a href="{{get_url_from_forwarded(message[5])}}" class="message-link">{{get_url_from_forwarded(message[5])}}</a>
+                                    Переслано из: <a href="{{get_url_from_forwarded(message[5])}}" class="message-link">{{get_url_from_forwarded(message[5])}}</a>
                                 </div>
                             {% endif %}
                             
@@ -795,36 +795,36 @@
                                 
                                 {% if message[4] %}
                                     {% if is_voice_message %}
-                                        <div class="media-label">Voice message: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Голосовое сообщение: <span class="media-filename">{{filename}}</span></div>
                                     {% elif message[3] == 'MessageMediaPhoto' %}
-                                        <div class="media-label">Photo: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Фото: <span class="media-filename">{{filename}}</span></div>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp4') or message[4].lower().endswith('.webm')) %}
-                                        <div class="media-label">Video: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Видео: <span class="media-filename">{{filename}}</span></div>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp3') or message[4].lower().endswith('.ogg') or message[4].lower().endswith('.m4a') or message[4].lower().endswith('.oga') or message[4].lower().endswith('.flac') or message[4].lower().endswith('.aac') or message[4].lower().endswith('.wav')) %}
-                                        <div class="media-label">Audio file: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Аудиофайл: <span class="media-filename">{{filename}}</span></div>
                                     {% elif message[3] == 'MessageMediaDocument' %}
-                                        <div class="media-label">File: <span class="media-filename">{{filename}}</span></div>
+                                        <div class="media-label">Файл: <span class="media-filename">{{filename}}</span></div>
                                     {% endif %}
                                     
                                     {% if message[3] == 'MessageMediaPhoto' %}
-                                        <img src="{{message[4]}}" alt="Photo" class="message-media">
+                                        <img src="{{message[4]}}" alt="Фото" class="message-media">
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp4') or message[4].lower().endswith('.webm')) %}
                                         <video controls class="message-media">
                                             <source src="{{message[4]}}" type="video/mp4">
-                                            Your browser does not support the video tag.
+                                            Ваш браузер не поддерживает видео.
                                         </video>
                                     {% elif message[3] == 'MessageMediaDocument' and message[4] and (message[4].lower().endswith('.mp3') or message[4].lower().endswith('.ogg') or message[4].lower().endswith('.m4a') or message[4].lower().endswith('.oga') or message[4].lower().endswith('.flac') or message[4].lower().endswith('.aac') or message[4].lower().endswith('.wav')) %}
                                         <audio controls>
                                             <source src="{{message[4]}}" type="audio/mpeg">
-                                            Your browser does not support the audio tag.
+                                            Ваш браузер не поддерживает аудио.
                                         </audio>
                                     {% elif is_voice_message or (message[3] == 'MessageMediaDocument' and message[4] and message[4].lower().endswith('.oga')) %}
                                         <audio controls>
                                             <source src="{{message[4]}}" type="audio/ogg">
-                                            Your browser does not support the audio tag.
+                                            Ваш браузер не поддерживает аудио.
                                         </audio>
                                     {% else %}
-                                        <a href="{{message[4]}}" class="btn btn-primary" target="_blank">Open media</a>
+                                        <a href="{{message[4]}}" class="btn btn-primary" target="_blank">Открыть медиа</a>
                                     {% endif %}
                                 {% endif %}
                                 
@@ -895,9 +895,9 @@
     </div>
     
     <div class="controls">
-        <button class="order-toggle" id="orderToggle">Newest First</button>
+        <button class="order-toggle" id="orderToggle">Сначала новые</button>
         <select class="date-selector" id="dateSelector">
-            <option value="">Go to date...</option>
+            <option value="">Перейти к дате...</option>
             {% for date, _ in grouped_messages %}
                 <option value="date-{{date|replace(' ', '-')|replace(',', '')}}">{{date}}</option>
             {% endfor %}
@@ -971,7 +971,7 @@
                         }
                     }
                     
-                    let senderName = 'Unknown';
+                    let senderName = 'Неизвестно';
                     const senderAttr = msg.getAttribute('data-sender');
                     if (senderAttr) {
                         senderName = senderAttr;
@@ -1190,13 +1190,13 @@
                             let previewContent = document.createElement('div');
                             previewContent.className = 'preview-content';
                             
-                            // Add sender info with "Original message" label
+                            // Добавляем отправителя с пометкой исходного сообщения.
                             const header = document.createElement('div');
                             header.style.display = 'flex';
                             header.style.justifyContent = 'space-between';
                             header.style.marginBottom = '5px';
                             
-                            const sender = targetMsg.getAttribute('data-sender') || 'Unknown';
+                            const sender = targetMsg.getAttribute('data-sender') || 'Неизвестно';
                             const senderDiv = document.createElement('div');
                             senderDiv.className = 'message-sender';
                             senderDiv.textContent = sender;
@@ -1205,7 +1205,7 @@
                             label.style.fontSize = '0.8em';
                             label.style.color = '#888';
                             label.style.fontStyle = 'italic';
-                            label.textContent = 'Original message';
+                            label.textContent = 'Исходное сообщение';
                             
                             header.appendChild(senderDiv);
                             header.appendChild(label);
@@ -1237,7 +1237,7 @@
                                 
                                 const chainTitle = document.createElement('div');
                                 chainTitle.className = 'reply-chain-title';
-                                chainTitle.textContent = 'This message is part of a conversation:';
+                                chainTitle.textContent = 'Это сообщение является частью ветки:';
                                 chainDiv.appendChild(chainTitle);
                                 
                                 // Only show up to 3 other messages in the chain for simplicity
@@ -1265,14 +1265,14 @@
                                     moreInfo.style.fontSize = '0.8em';
                                     moreInfo.style.marginTop = '5px';
                                     moreInfo.style.color = '#666';
-                                    moreInfo.textContent = `+ ${chain.length - 4} more messages in this conversation`;
+                                    moreInfo.textContent = `+ ${chain.length - 4} сообщений в этой ветке`;
                                     chainDiv.appendChild(moreInfo);
                                 }
                                 
                                 previewDiv.appendChild(chainDiv);
                             }
                         } else {
-                            previewDiv.textContent = 'Message not available';
+                            previewDiv.textContent = 'Сообщение недоступно';
                         }
                     }
                 });
@@ -1295,7 +1295,7 @@
             
             function toggleMessageOrder() {
                 isNewestFirst = !isNewestFirst;
-                orderToggle.textContent = isNewestFirst ? 'Newest First' : 'Oldest First';
+                orderToggle.textContent = isNewestFirst ? 'Сначала новые' : 'Сначала старые';
                 
                 const container = document.getElementById('messageContainer');
                 const dateGroups = [];

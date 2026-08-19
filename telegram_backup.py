@@ -469,6 +469,14 @@ async def media_exists(cursor, entity_id, message_id, media_type):
     media_file = result[0]
     return resolve_media_path(media_file, entity_id) is not None
 
+def _set_file_date(file_path, message):
+    try:
+        if hasattr(message, 'date') and message.date:
+            mtime = message.date.timestamp()
+            os.utime(file_path, (mtime, mtime))
+    except Exception as e:
+        print(f"Ошибка при установке даты файла {file_path}: {e}")
+
 async def download_message_media(message, cursor, entity_id, media_type):
     cursor.execute("SELECT media_file, media_hash FROM messages WHERE id = ? AND entity_id = ?",
                   (message.id, entity_id))
@@ -477,17 +485,31 @@ async def download_message_media(message, cursor, entity_id, media_type):
         existing_file = result[0]
         existing_media_path = resolve_media_path(existing_file, entity_id)
         if existing_media_path:
+            _set_file_date(existing_media_path, message)
             return get_media_db_path(existing_media_path, entity_id), result[1] or get_file_hash(existing_media_path)
 
     media_file = get_media_target_path(message, entity_id, media_type)
     if os.path.exists(media_file):
-        return get_media_db_path(media_file, entity_id), get_file_hash(media_file)
+        expected_size = getattr(message.file, 'size', None) if getattr(message, 'file', None) else None
+        if expected_size is not None and os.path.getsize(media_file) != expected_size:
+            print(f"Файл {media_file} имеет неверный размер (битый). Скачиваем заново...")
+        else:
+            _set_file_date(media_file, message)
+            return get_media_db_path(media_file, entity_id), get_file_hash(media_file)
 
     try:
         os.makedirs(os.path.dirname(media_file), exist_ok=True)
-        downloaded_file = await message.download_media(file=media_file)
+        temp_media_file = media_file + ".download"
+        
+        # Удаляем временный файл от предыдущей неудачной попытки, если он есть
+        if os.path.exists(temp_media_file):
+            os.remove(temp_media_file)
+            
+        downloaded_file = await message.download_media(file=temp_media_file)
         if downloaded_file:
-            return get_media_db_path(downloaded_file, entity_id), get_file_hash(downloaded_file)
+            os.replace(downloaded_file, media_file)
+            _set_file_date(media_file, message)
+            return get_media_db_path(media_file, entity_id), get_file_hash(media_file)
     except Exception as e:
         print(f"Ошибка при скачивании медиа из сообщения {message.id}: {e}")
 
